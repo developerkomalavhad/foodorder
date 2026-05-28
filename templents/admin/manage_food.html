@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Food | Foodie{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <h1>Manage Food Items</h1>
+        <a class="primary-btn" href="{% url 'admin_add_food' %}">Add Food</a>
+    </div>
+
+    <div class="table-card">
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Available</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for food in foods %}
+                        <tr>
+                            <td><img class="thumb" src="{{ food.image_url|default:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80' }}" alt="{{ food.name }}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80'"></td>
+                            <td>{{ food.name }}</td>
+                            <td>{{ food.category }}</td>
+                            <td>₹{{ food.price }}</td>
+                            <td>{{ food.is_available|yesno:"Yes,No" }}</td>
+                            <td>
+                                <form method="post" action="{% url 'admin_delete_food' food.id %}">
+                                    {% csrf_token %}
+                                    <button class="danger-btn" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="6">No food items found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home | Foodie{% endblock %}
+
+{% block content %}
+<section class="home-hero">
+    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=80" alt="Fresh restaurant food">
+    <div class="home-copy">
+        <h1>Welcome to Foodie</h1>
+        <p>Order fresh meals from your favorite menu in just a few clicks.</p>
+        <a class="primary-btn" href="{% url 'menu' %}">Browse Menu</a>
+    </div>
+</section>
+
+{% if featured_foods %}
+<section class="section">
+    <div class="section-header">
+        <h2>Popular Picks</h2>
+    </div>
+    <div class="food-grid">
+        {% for food in featured_foods %}
+            <article class="food-card">
+                <img src="{{ food.image_url|default:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=700&q=80' }}" alt="{{ food.name }}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=700&q=80'">
+                <div class="food-info">
+                    <h3>{{ food.name }}</h3>
+                    <p>{{ food.description }}</p>
+                    <strong>₹{{ food.price }}</strong>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

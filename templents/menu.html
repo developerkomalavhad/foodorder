@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Menu | Foodie{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <h1>Our Delicious Menu</h1>
+        <a class="secondary-btn" href="{% url 'cart' %}">View Cart</a>
+    </div>
+
+    <div class="food-grid">
+        {% for food in foods %}
+            <article class="food-card">
+                <img src="{{ food.image_url|default:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=700&q=80' }}" alt="{{ food.name }}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=700&q=80'">
+                <div class="food-info">
+                    <span class="pill">{{ food.category }}</span>
+                    <h2>{{ food.name }}</h2>
+                    <p>{{ food.description }}</p>
+                    <strong>₹{{ food.price }}</strong>
+                    <a class="primary-btn full" href="{% url 'add_to_cart' food.id %}">Order Now</a>
+                </div>
+            </article>
+        {% empty %}
+            <p class="empty-state">No food items are available yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | Foodie{% endblock %}
+
+{% block content %}
+<section class="admin-layout">
+    <aside class="admin-sidebar">
+        <h2>Admin Panel</h2>
+        <a class="active" href="{% url 'admin_dashboard' %}">Dashboard</a>
+        <a href="{% url 'admin_add_food' %}">Add Food</a>
+        <a href="{% url 'admin_manage_food' %}">Manage Menu</a>
+        <a href="{% url 'admin_orders' %}">Orders</a>
+        <a href="{% url 'admin_users' %}">Users</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </aside>
+
+    <div class="admin-main">
+        <div class="section-header">
+            <h1>Welcome Admin</h1>
+        </div>
+
+        <div class="stats-grid">
+            <article class="stat-card">
+                <h3>Total Orders</h3>
+                <p>{{ total_orders }}</p>
+            </article>
+            <article class="stat-card">
+                <h3>Total Users</h3>
+                <p>{{ total_users }}</p>
+            </article>
+            <article class="stat-card">
+                <h3>Food Items</h3>
+                <p>{{ food_count }}</p>
+            </article>
+            <article class="stat-card">
+                <h3>Total Revenue</h3>
+                <p>₹{{ revenue }}</p>
+            </article>
+        </div>
+
+        <div class="table-card">
+            <h2>Recent Orders</h2>
+            <div class="responsive-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in recent_orders %}
+                            <tr>
+                                <td>#{{ order.id }}</td>
+                                <td>{{ order.user.get_full_name|default:order.user.username }}</td>
+                                <td>
+                                    {% for item in order.items.all %}
+                                        {{ item.food_item.name }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>₹{{ order.total_amount }}</td>
+                                <td>{{ order.status }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="5">No orders yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

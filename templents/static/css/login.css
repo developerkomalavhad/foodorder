@@ -1,0 +1,17 @@
+body{
+    background-color: rgb(109, 192, 237);
+
+}
+.main-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.login-container{
+    width: 400px;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: #dab5cd;
+    border: 1px solid #cfdb45;
+}

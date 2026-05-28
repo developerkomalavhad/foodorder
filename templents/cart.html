@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Cart | Foodie{% endblock %}
+
+{% block content %}
+<section class="section narrow">
+    <div class="section-header">
+        <h1>Your Cart</h1>
+        <a class="secondary-btn" href="{% url 'menu' %}">Add More</a>
+    </div>
+
+    <div class="table-card">
+        {% for item in cart_items %}
+            <div class="cart-row">
+                <div class="cart-food">
+                    <img src="{{ item.food.image_url|default:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=700&q=80' }}" alt="{{ item.food.name }}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=700&q=80'">
+                    <div>
+                        <h2>{{ item.food.name }}</h2>
+                        <p>₹{{ item.food.price }} each</p>
+                    </div>
+                </div>
+                <div class="qty-actions">
+                    <a class="icon-btn" href="{% url 'update_cart' item.food.id 'decrease' %}">-</a>
+                    <strong>{{ item.quantity }}</strong>
+                    <a class="icon-btn" href="{% url 'update_cart' item.food.id 'increase' %}">+</a>
+                </div>
+                <strong>₹{{ item.subtotal }}</strong>
+                <a class="danger-btn" href="{% url 'remove_from_cart' item.food.id %}">Remove</a>
+            </div>
+        {% empty %}
+            <p class="empty-state">Your cart is empty.</p>
+        {% endfor %}
+
+        {% if cart_items %}
+            <div class="cart-total">
+                <h2>Total: ₹{{ total }}</h2>
+                <form method="post" action="{% url 'checkout' %}">
+                    {% csrf_token %}
+                    <button class="primary-btn" type="submit">Checkout</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Orders | Foodie{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <h1>Customer Orders</h1>
+        <a class="secondary-btn" href="{% url 'admin_dashboard' %}">Dashboard</a>
+    </div>
+
+    <div class="table-card">
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Food</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>#{{ order.id }}</td>
+                            <td>{{ order.user.get_full_name|default:order.user.username }}</td>
+                            <td>
+                                {% for item in order.items.all %}
+                                    {{ item.food_item.name }} x {{ item.quantity }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>₹{{ order.total_amount }}</td>
+                            <td>
+                                <form class="inline-form" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                                    <select name="status">
+                                        {% for value,label in statuses %}
+                                            <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button class="secondary-btn" type="submit">Save</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5">No orders yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
